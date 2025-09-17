@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Online Voting System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+    }
+    .candidate {
+      margin: 10px 0;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 20px;
+      font-size: 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Vote for Your Favorite Candidate</h2>
+    <form id="voteForm">
+      <div class="candidate">
+        <input type="radio" id="candidate1" name="candidate" value="Alice">
+        <label for="candidate1">Alice</label>
+      </div>
+      <div class="candidate">
+        <input type="radio" id="candidate2" name="candidate" value="Bob">
+        <label for="candidate2">Bob</label>
+      </div>
+      <div class="candidate">
+        <input type="radio" id="candidate3" name="candidate" value="Charlie">
+        <label for="candidate3">Charlie</label>
+      </div>
+      <button type="button" onclick="submitVote()">Submit Vote</button>
+    </form>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function submitVote() {
+      const selected = document.querySelector('input[name="candidate"]:checked');
+      const resultDiv = document.getElementById("result");
+
+      if (selected) {
+        const candidate = selected.value;
+        resultDiv.textContent = `You voted for ${candidate}. Thank you!`;
+
+        // Simulate vote submission (to a server)
+        console.log(`Vote submitted for: ${candidate}`);
+      } else {
+        resultDiv.textContent = "Please select a candidate before voting.";
+      }
+    }
+  </script>
+</body>
+</html>
