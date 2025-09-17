@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Voting System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white p-6 rounded shadow-md w-full md:w-1/2 lg:w-1/3">
+    <h2 class="text-2xl font-bold text-center mb-6">Online Voting</h2>
+    <label class="block text-lg mb-2" for="option">Choose an option:</label>
+    <select id="option" class="w-full p-2 border rounded mb-4">
+      <option value="Red">Red House</option>
+      <option value="Blue">Blue House</option>
+      <option value="Green">Green House</option>
+      <option value="Yellow">Yellow House</option>
+    </select>
+    <button id="voteBtn" class="bg-green-600 text-white w-full py-2 rounded mt-2">Vote</button>
+    <button id="clearBtn" class="bg-red-500 text-white w-full py-2 rounded mt-2">Clear Votes</button>
+    <button id="showChartBtn" class="bg-purple-600 text-white w-full py-2 rounded mt-2">Show Pie Chart</button>
+    <div id="voteMsg" class="text-center mt-4"></div>
+    <ul id="voteList" class="mt-4"></ul>
+    <canvas id="resultsChart" class="mt-6"></canvas>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const voteBtn = document.getElementById('voteBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const showChartBtn = document.getElementById('showChartBtn');
+      const option = document.getElementById('option');
+      const voteMsg = document.getElementById('voteMsg');
+      const voteList = document.getElementById('voteList');
+      const resultsChart = document.getElementById('resultsChart');
+      let chart;
+      // Voting logic
+      voteBtn.onclick = () => {
+        let votes = JSON.parse(localStorage.getItem('votes')) || {};
+        let choice = option.value;
+        votes[choice] = (votes[choice] || 0) + 1;
+        localStorage.setItem('votes', JSON.stringify(votes));
+        voteMsg.textContent = `You voted for ${choice}!`;
+        renderVotes();
+      };
+      // Clear votes logic
+      clearBtn.onclick = () => {
+        localStorage.removeItem('votes');
+        voteMsg.textContent = 'All votes cleared!';
+        renderVotes();
+        if (chart) chart.destroy();
+      };
+      // Show results chart
+      showChartBtn.onclick = () => {
+        let votes = JSON.parse(localStorage.getItem('votes')) || {};
+        let labels = Object.keys(votes);
+        let data = Object.values(votes);
+        if (chart) chart.destroy();
+        chart = new Chart(resultsChart, {
+          type: 'pie',
+          data: { labels, datasets: [{ data, backgroundColor: ['red','blue','green','yellow'] }] },
+          options: { responsive: true, plugins: { legend: { position: 'top' } } }
+        });
+      };
+      // Render vote list
+      function renderVotes() {
+        let votes = JSON.parse(localStorage.getItem('votes')) || {};
+        voteList.innerHTML = '';
+        Object.entries(votes).forEach(([k, v]) => {
+          let li = document.createElement('li');
+          li.textContent = `${k} House: ${v}`;
+          voteList.appendChild(li);
+        });
+      }
+      renderVotes();
+    });
+  </script>
+</body>
+</html>
