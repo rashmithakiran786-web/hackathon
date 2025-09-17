@@ -1,231 +1,31 @@
+
+Harshitha
+9:52 AM (5 hours ago)
+to me, valli
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Online Voting System</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #eef2f3;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      width: 90%;
-      max-width: 900px;
-    }
-
-    .hidden { display: none; }
-
-    /* Login form */
-    .login-box {
-      text-align: center;
-    }
-
-    .login-box input {
-      display: block;
-      margin: 10px auto;
-      padding: 8px;
-      width: 80%;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    .login-box button {
-      background: green;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .logout-btn {
-      background-color: #ff4d4d;
-      color: white;
-      padding: 6px 12px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .voter-card {
-      width: 25%;
-      border-right: 2px solid #ddd;
-      padding-right: 15px;
-      float: left;
-    }
-
-    .party-list {
-      width: 60%;
-      float: right;
-    }
-
-    .party {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 10px 15px;
-      margin-bottom: 15px;
-    }
-
-    .party button {
-      background: green;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .party button:disabled {
-      background: gray;
-      cursor: not-allowed;
-    }
-
-    .status {
-      font-weight: bold;
-    }
-    .status.voted { color: green; }
-    .status.not-voted { color: red; }
-  </style>
+  <title>Course Information Finder</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="container">
+    <h1>🎓 Course Information Finder</h1>
+   
+    <label for="courseSelect">Select a Course:</label>
+    <select id="courseSelect" onchange="showCourseInfo()">
+      <option value="">-- Choose --</option>
+      <option value="bca">BCA</option>
+      <option value="bba">BBA</option>
+      <option value="btech">B.Tech</option>
+      <option value="nursing">B.Sc Nursing</option>
+    </select>
 
-<div class="container">
-
-  <!-- Login Page -->
-  <div id="loginPage" class="login-box">
-    <h2>Login to Vote</h2>
-    <input type="text" id="username" placeholder="Enter Username" required>
-    <input type="password" id="password" placeholder="Enter Password" required>
-    <input type="date" id="dob" required>
-    <button onclick="login()">Login</button>
-    <p id="loginMessage" style="color:red;"></p>
+    <div id="courseDetails" class="details-box"></div>
   </div>
 
-  <!-- Voting Page -->
-  <div id="votingPage" class="hidden">
-    <div class="top-bar">
-      <h2>Online Voting System</h2>
-      <button class="logout-btn" onclick="logout()">Logout</button>
-    </div>
-
-    <div class="voter-card">
-      <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile" />
-      <h2 id="voterName">Shahebaz</h2>
-      <p><strong>Mobile:</strong> 9511846837</p>
-      <p><strong>Address:</strong> Mumbai</p>
-      <p><strong>D.O.B:</strong> <span id="voterDob"></span></p>
-      <p><strong>Status:</strong> <span id="voteStatus" class="status not-voted">Not Voted</span></p>
-    </div>
-
-    <div class="party-list">
-      <div class="party">
-        <span>1. BJP (MLA)</span>
-        <img src="https://upload.wikimedia.org/wikipedia/en/6/6e/Bharatiya_Janata_Party_logo.svg" alt="BJP" />
-        <button onclick="vote(this, 'BJP')">Vote</button>
-      </div>
-      <div class="party">
-        <span>2. Congress (MLA)</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Indian_National_Congress_hand_symbol.png" alt="Congress" />
-        <button onclick="vote(this, 'Congress')">Vote</button>
-      </div>
-      <div class="party">
-        <span>3. AAP (MLA)</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/Aam_Aadmi_Party_logo.png" alt="AAP" />
-        <button onclick="vote(this, 'AAP')">Vote</button>
-      </div>
-      <div class="party">
-        <span>4. NCP (MLA)</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Nationalist_Congress_Party_flag.svg" alt="NCP" />
-        <button onclick="vote(this, 'NCP')">Vote</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  let hasVoted = localStorage.getItem("hasVoted");
-
-  function calculateAge(dob) {
-    let birthDate = new Date(dob);
-    let today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    let m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
-  }
-
-  function login() {
-    let user = document.getElementById("username").value;
-    let pass = document.getElementById("password").value;
-    let dob = document.getElementById("dob").value;
-    let message = document.getElementById("loginMessage");
-
-    // Dummy credentials (for demo)
-    if (user === "shahebaz" && pass === "12345") {
-      let age = calculateAge(dob);
-      if (age >= 18) {
-        document.getElementById("loginPage").classList.add("hidden");
-        document.getElementById("votingPage").classList.remove("hidden");
-        document.getElementById("voterDob").textContent = dob;
-
-        if (hasVoted) {
-          document.getElementById("voteStatus").textContent = `Voted for ${hasVoted}`;
-          document.getElementById("voteStatus").classList.remove("not-voted");
-          document.getElementById("voteStatus").classList.add("voted");
-          disableAllButtons();
-        }
-      } else {
-        message.textContent = "You must be 18 or older to vote!";
-      }
-    } else {
-      message.textContent = "Invalid username or password!";
-    }
-  }
-
-  function vote(btn, partyName) {
-    if (!hasVoted) {
-      localStorage.setItem("hasVoted", partyName);
-      document.getElementById("voteStatus").textContent = `Voted for ${partyName}`;
-      document.getElementById("voteStatus").classList.remove("not-voted");
-      document.getElementById("voteStatus").classList.add("voted");
-      alert(`Thank you for voting for ${partyName}`);
-      disableAllButtons();
-    }
-  }
-
-  function disableAllButtons() {
-    const buttons = document.querySelectorAll(".party button");
-    buttons.forEach(btn => btn.disabled = true);
-  }
-
-  function logout() {
-    alert("You have been logged out.");
-    window.location.reload();
-  }
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
