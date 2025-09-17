@@ -24,3 +24,77 @@
   <script src="script.js"></script>
 </body>
 </html>
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f8;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+label, select {
+  display: block;
+  margin: 15px 0;
+  font-size: 16px;
+}
+
+.details-box {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #eef;
+  border-radius: 5px;
+}
+const courseData = {
+  bca: {
+    college: "ABC Institute of Technology",
+    duration: "3 Years",
+    jobs: "Software Developer, Web Designer, IT Support"
+  },
+  bba: {
+    college: "XYZ College of Management",
+    duration: "3 Years",
+    jobs: "Business Analyst, Marketing Executive, HR Manager"
+  },
+  btech: {
+    college: "Global Engineering University",
+    duration: "4 Years",
+    jobs: "Engineer, Data Analyst, Project Manager"
+  },
+  nursing: {
+    college: "National Nursing College",
+    duration: "4 Years",
+    jobs: "Registered Nurse, Healthcare Assistant"
+  }
+};
+
+function showCourseInfo() {
+  const select = document.getElementById("courseSelect");
+  const details = document.getElementById("courseDetails");
+  const selected = select.value;
+
+  if (selected && courseData[selected]) {
+    const info = courseData[selected];
+    details.innerHTML = `
+      <h2>${selected.toUpperCase()}</h2>
+      <p><strong>College:</strong> ${info.college}</p>
+      <p><strong>Duration:</strong> ${info.duration}</p>
+      <p><strong>Job Opportunities:</strong> ${info.jobs}</p>
+    `;
+  } else {
+    details.innerHTML = "";
+  }
+}
